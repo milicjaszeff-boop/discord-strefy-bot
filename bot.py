@@ -44,10 +44,21 @@ async def on_ready():
         update_topka.start()
 
 
-# RESET TOPKI
+# RESET TOPKI - TYLKO WYBRANE RANGI
 @bot.command()
-@commands.has_permissions(administrator=True)
 async def resetstref(ctx):
+
+    allowed_roles = [
+        "【📄】Zarząd",
+        "【👑】Zastępca OG",
+        "【👑】OG"
+    ]
+
+    user_roles = [role.name for role in ctx.author.roles]
+
+    if not any(role in allowed_roles for role in user_roles):
+        await ctx.send("Nie masz permisji do użycia tej komendy.")
+        return
 
     async with aiosqlite.connect(DATABASE) as db:
         await db.execute("DELETE FROM strefy")
