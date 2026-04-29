@@ -111,6 +111,58 @@ async def strefa(ctx, nazwa_strefy=None):
 # TOPKA CO MINUTĘ
 @tasks.loop(minutes=1)
 async def update_topka():
+    try:
+        await bot.wait_until_ready()
+
+        for guild in bot.guilds:
+
+            channel = discord.utils.get(
+                guild.text_channels,
+                name="⭐topka-stref"
+            )
+
+            if channel is None:
+                print(f"Nie znaleziono kanału w {guild.name}")
+                continue
+
+            async with aiosqlite.connect(DATABASE) as db:
+
+                cursor = await db.execute(
+                    "SELECT username, strefy FROM strefy ORDER BY strefy DESC LIMIT 10"
+                )
+
+                rows = await cursor.fetchall()
+
+            ranking = ""
+
+            for index, row in enumerate(rows, start=1):
+                ranking += f"{index}. {row[0]} — {row[1]} stref\n"
+
+            if ranking == "":
+                ranking = "Brak danych."
+
+            embed = Embed(
+                title="🏆 TOP 10 STREF",
+                description=ranking,
+                color=discord.Color.gold()
+            )
+
+            messages = [msg async for msg in channel.history(limit=20)]
+
+            bot_message = None
+
+            for msg in messages:
+                if msg.author.id == bot.user.id:
+                    bot_message = msg
+                    break
+
+            if bot_message:
+                await bot_message.edit(embed=embed)
+            else:
+                await channel.send(embed=embed)
+
+    except Exception as e:
+        print(f"Błąd update_topka: {e}")
 
     await bot.wait_until_ready()
 
