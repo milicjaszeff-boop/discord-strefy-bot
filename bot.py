@@ -58,7 +58,7 @@ async def refresh_topka():
         ranking = ""
 
         for index, row in enumerate(rows, start=1):
-            ranking += f"{index}. {row[0]} — {row[1]} stref
+            ranking += f"{index}. {row[0]} — {row[1]} stref\n"
 "
 
         if ranking == "":
