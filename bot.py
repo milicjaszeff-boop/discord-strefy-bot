@@ -22,9 +22,9 @@ DATABASE = "database.db"
 
 # Role z dostępem
 allowed_roles = [
-    "【📄】Zarząd",
-    "【👑】Zastępca OG",
-    "【👑】OG"
+    "【👑】01",
+    "【👑】02",
+    "【👑】03"
 ]
 
 
